@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title></title>
+  </head>
+  <body>
+    <h1>Sign Up</h1>
+    <form action="/sign-up-form" method="POST">
+      <ul>
+        <li>
+          <label for="username">Username</label>
+          <input
+            id="username"
+            name="username"
+            placeholder="User Name"
+            type="text"
+            value="<%= formData ? formData.username : '' %>"
+          />
+        </li>
+        <li>
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" />
+        </li>
+        <li>
+          <label for="passwordConfirm">Confirm Password</label>
+          <input id="passwordConfirm" name="passwordConfirm" type="password" />
+        </li>
+        <li>
+          <button>Sign Up</button>
+        </li>
+      </ul>
+    </form>
+
+    <% if (errors) { %>
+    <ul>
+      <% errors.forEach(error => { %>
+      <li><%= error.msg %></li>
+      <% }); %>
+    </ul>
+    <% } %>
+  </body>
+</html>

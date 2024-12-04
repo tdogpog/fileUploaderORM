@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// id for primary key, string denoting data type, @id marks it as primary key, @default(uuid()) automatically generates a unique 
+// uuid for each record 
+//sid session identifier that must be unique for each session 
+//data stores session data
+//expires at stores the timestamp for when to expire the session
+model Session{
+  id        String   @id @default(uuid())
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
+//id primary key
+//username must be unique 
+//password string
+//folders is a one-to-many relationship
+//defines what folders the user has access to in the db 
+model User{
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  folders  Folder[]
+}
+
+//id primary key
+//name
+//userID references the User idfield 
+//parentID? references the id field of a potential parent folder 
+//timestamps 
+//files is a one-to-many, means it can contain multiple files
+//parent is a self referencing one-to-many: each folder can have a parent folder which will be based off the parentID which will 
+//reference the id of the parent.
+
+//subfolders represents all child folders related to this folder
+//user defines the relationship from the user model we did folders Folder[]
+//it says that he userID references the id in the usertable.
+model Folder{
+  id        String   @id @default(uuid())
+  name      String   
+  userID    String
+  parentID  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  files     File[]
+  parent     Folder?  @relation("Subfolders", fields: [parentID], references: [id])
+  subfolders Folder[] @relation("Subfolders")
+  user       User     @relation(fields: [userID], references: [id])
+}
+
+//id primary key
+//name
+//path aka file locaiton 
+//size of the file 
+//folderId if its in a folder 
+//timestamps
+// folder referential relationship where if its in a folder fill folderId with the id of the folder its in 
+model File {
+  id        String   @id @default(uuid())
+  name      String
+  path      String
+  size      Int
+  folderID  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  folder    Folder?  @relation(fields: [folderID], references: [id])
+}
