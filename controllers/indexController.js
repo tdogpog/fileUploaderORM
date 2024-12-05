@@ -14,10 +14,7 @@ const signupValidation = [
     .withMessage("Username must be at least 5 chars long")
     .custom(async (username) => {
       //no duplicate usernames
-      const { rows } = await pool.query(
-        "SELECT * FROM users WHERE username = $1",
-        [username]
-      );
+      const { rows } = await Prisma.user.findUnique({ where: { username } });
       if (rows.length > 0) {
         throw new Error("Username is already taken");
       }
@@ -68,14 +65,14 @@ function userLogout(req, res) {
 function userSignUp(req, res) {
   //VALIDATION
 
+  //send errors to the form for user to adjust inputs with
+  //validation feedback
+  //send back the errors
+  //send back the form data so the user doesnt have to restart every field on re-render
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    // send errors to the form for user to adjust inputs with
-    // validation feedback
     return res.render("sign-up-form", {
-      //send back the errors
       errors: errors.array(),
-      //send back the form data so the user doesnt have to restart every field on re-render
       formData: req.body || {},
     });
   }
@@ -89,15 +86,14 @@ function userSignUp(req, res) {
 
     //CONVERT THIS INTO PRISA ORM
     try {
-      await pool.query(
-        "INSERT INTO users (firstname, lastname, username, password) VALUES ($1,$2,$3,$4)",
-        [
-          req.body.firstname,
-          req.body.lastname,
-          req.body.username,
-          hashedPassword,
-        ]
-      );
+      await prisma.user.create({
+        data: {
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          username: req.body.username,
+          password: hashedPassword,
+        },
+      });
       res.redirect("/");
     } catch (dbErr) {
       console.log("error inserting into db:", dbErr);
