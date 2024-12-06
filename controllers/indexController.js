@@ -1,20 +1,21 @@
-const passport = require("passsport");
+const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const { body, validationResult } = require("express-validator");
+const { PrismaClient } = require("@prisma/client");
+
+const prisma = new PrismaClient();
 
 //PARSE EVERYTHING FOR POOL AND SQL AND REPLACE IT WITH PRISMA
 
 //VALIDATION LAYER-----------------------------------------------
 
 const signupValidation = [
-  body("firstname").isLength({ min: 1 }).withMessage("First name is required"),
-  body("lastname").isLength({ min: 1 }).withMessage("Last name is required"),
   body("username")
     .isLength({ min: 5 })
     .withMessage("Username must be at least 5 chars long")
     .custom(async (username) => {
       //no duplicate usernames
-      const { rows } = await Prisma.user.findUnique({ where: { username } });
+      const { rows } = await prisma.user.findUnique({ where: { username } });
       if (rows.length > 0) {
         throw new Error("Username is already taken");
       }
@@ -44,8 +45,9 @@ function getSignUp(req, res) {
   res.render("sign-up-form", { errors: [], formData: {} });
 }
 
-function userLogin(req, res) {
-  console.log("Enter controller function");
+//call next to stop a hang and let the redir happen
+function userLogin(req, res, next) {
+  console.log("Enter login function");
   passport.authenticate("local", {
     //redir to library
     successRedirect: "/library",

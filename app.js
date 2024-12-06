@@ -1,21 +1,23 @@
 require("dotenv").config();
 
+///imports///
+
 //base requires
 const express = require("express");
 const path = require("node:path");
-
 //routers
-
+const indexRouter = require("./routes/indexRouter");
+const libraryRouter = require("./routes/libraryRouter");
 //session and prisma
 const session = require("express-session");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const { PrismaClient } = require("@prisma/client");
-
 //passport auth
 const passport = require("passport");
-const passportConfig = require("./auth/passportConfig");
+const { passportConfig } = require("./auth/passportConfig");
 
 ///begin app declarations///
+
 const app = express();
 
 app.set("view engine", "ejs");

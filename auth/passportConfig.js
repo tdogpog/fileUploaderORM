@@ -1,6 +1,10 @@
 const LocalStrategy = require("passport-local");
 const bcrypt = require("bcryptjs");
 
+const { PrismaClient } = require("@prisma/client");
+
+const prisma = new PrismaClient();
+
 //THIS NEEDS TO CHANGE TO ORM NOT EXPLCIT SQL
 const passportConfig = async (passport) => {
   passport.use(
@@ -45,4 +49,4 @@ const passportConfig = async (passport) => {
   });
 };
 
-module.exports = passportConfig;
+module.exports = { passportConfig };

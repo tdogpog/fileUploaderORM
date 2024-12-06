@@ -7,17 +7,17 @@ const {
   userSignUp,
   getSignUp,
   signupValidation,
-} = require("../controllers/authController");
+} = require("../controllers/indexController");
 
 const indexRouter = Router();
 
 //gets
 indexRouter.get("/", homepage);
-indexRouter.get("/sign-up", getSignUp);
+indexRouter.get("/sign-up-form", getSignUp);
 indexRouter.get("/log-out", userLogout);
 
 //posts
-indexRouter.post("/sign-up", signupValidation, userSignUp);
+indexRouter.post("/sign-up-form", signupValidation, userSignUp);
 indexRouter.post("/log-in", userLogin);
 
 module.exports = indexRouter;
