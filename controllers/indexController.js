@@ -88,6 +88,7 @@ function userSignUp(req, res) {
 
     //CONVERT THIS INTO PRISA ORM
     try {
+      console.log("CREATING USER...");
       await prisma.user.create({
         data: {
           firstname: req.body.firstname,
