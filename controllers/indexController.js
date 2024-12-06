@@ -15,8 +15,8 @@ const signupValidation = [
     .withMessage("Username must be at least 5 chars long")
     .custom(async (username) => {
       //no duplicate usernames
-      const { rows } = await prisma.user.findUnique({ where: { username } });
-      if (rows.length > 0) {
+      const user = await prisma.user.findUnique({ where: { username } });
+      if (user) {
         throw new Error("Username is already taken");
       }
     }),
