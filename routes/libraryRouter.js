@@ -16,7 +16,11 @@ const libraryRouter = Router();
 libraryRouter.get("/", getLibrary);
 
 //renders the contents of the folder
-libraryRouter.get("/:folderID", getFolder);
+//folder id will get grabbed from the db query
+libraryRouter.get("/:folderID", renderFolder);
+
+//get for the files to be rendered
+libraryRouter.get("/file/:fileID", renderFile);
 
 //MULTER PROCESS
 // Upload a file to the specified folder
