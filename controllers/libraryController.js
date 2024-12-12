@@ -40,8 +40,6 @@ async function createFolder(req, res) {
 }
 
 //uploads a file the same way create folder does, using the url to direct it
-//WIP with the multer
-//addFile needs name,path,size,folderID
 async function uploadFile(req, res) {
   if (!req.file) {
     //redir if you dont get a file to stop a 404
@@ -51,11 +49,11 @@ async function uploadFile(req, res) {
   try {
     console.log("file upload:", req.file);
     const userID = req.user.id;
-    const parentFolderID = req.params.folderID;
+    const currentFolderID = req.params.folderID;
     const { originalname, size, path } = req.file;
 
     //add file to db
-    await db.addFileDatabase(originalname, path, size, parentFolderID);
+    await db.addFileDatabase(originalname, path, size, currentFolderID);
 
     //delete the file from the temp multer storage uploads/
     //once its gotten to the postgresql db
