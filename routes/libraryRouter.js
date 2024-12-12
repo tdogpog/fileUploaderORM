@@ -9,6 +9,16 @@ const upload = multer({
   dest: "uploads/", // Save files in the "uploads" folder
 });
 
+const {
+  getLibrary,
+  renderFolder,
+  renderFile,
+  uploadFile,
+  createFolder,
+  renameMethod,
+  deleteMethod,
+} = require("../controllers/libraryController");
+
 const libraryRouter = Router();
 
 //define the route at the root of the base path defined in app.js
@@ -30,11 +40,13 @@ libraryRouter.post(
   uploadFile
 );
 
-libraryRouter.post("/:folderID/add-sub", postSubfolder);
+libraryRouter.post("/:folderID/add-sub", createFolder);
 
 //the database needs to know if its a folder/file so track its type
 //along with its ID for
 //updating and deletion
+// THE TYPE AND THE ID WILL BE DEFINED VIA HTML ON CREATION
+// LET THE EJS WORK THIS OUT
 libraryRouter.post("/:type/:id/rename", renameMethod);
 libraryRouter.post("/:type/:id/delete", deleteMethod);
 
