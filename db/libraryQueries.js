@@ -45,6 +45,7 @@ async function getFolderDatabase(userID, folderID) {
         },
       },
     });
+    return folders;
   } catch (error) {
     console.log("error fetching folder view in db:", error.message);
   }
@@ -110,7 +111,7 @@ async function deleteMethodDatabase(type, id) {
       },
     };
     if (type === "folder") {
-      await prisma.folder.delete(query);
+      await prisma.folder.deleteFolderRecursion(query);
     } else if (type === "file") {
       await prisma.file.delete(query);
     }
@@ -137,6 +138,34 @@ async function renameMethodDatabase(type, id, updatedName) {
     }
   } catch (error) {
     console.log("error updating file or folder in db:", error.message);
+  }
+}
+
+//helper functions
+
+async function deleteFolderRecursion(folderID) {
+  try {
+    //fetch all subfolders of the current folder
+    const subfolders = await prisma.folder.findMany({
+      where: { parentID: folderID },
+    });
+
+    //recursively delete each subfolder
+    for (const subfolder of subfolders) {
+      await deleteFolderRecursion(subfolder.id);
+    }
+
+    //delete all files within the current folder
+    await prisma.file.deleteMany({
+      where: { folderID: folderID },
+    });
+
+    //delete the current folder
+    await prisma.folder.delete({
+      where: { id: folderID },
+    });
+  } catch (error) {
+    console.log("error in cascading folder deletion:", error.message);
   }
 }
 
