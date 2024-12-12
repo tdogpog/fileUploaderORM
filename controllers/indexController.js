@@ -91,10 +91,13 @@ function userSignUp(req, res) {
       console.log("CREATING USER...");
       await prisma.user.create({
         data: {
-          firstname: req.body.firstname,
-          lastname: req.body.lastname,
           username: req.body.username,
           password: hashedPassword,
+          folders: {
+            create: {
+              name: "Library",
+            },
+          },
         },
       });
       res.redirect("/");
