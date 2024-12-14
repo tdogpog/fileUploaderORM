@@ -73,13 +73,16 @@
       <!-- Sidebar for Folder Navigation -->
       <div class="sidebar">
         <h3>Folders</h3>
+        <% if (folder.subfolders.length > 0) { %>
         <ul>
           <% folder.subfolders.forEach((subfolder) => { %>
           <li class="folder">
             <!-- Link to view the subfolder -->
             <a href="/library/<%= subfolder.id %>"><%= subfolder.name %></a>
           </li>
-          <% }); %>
+          <% }); %> <% } else { %>
+          <p>No subfolders available.</p>
+          <% } %>
         </ul>
         <% if (folder.parent) { %>
         <p>

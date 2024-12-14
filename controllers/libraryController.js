@@ -1,6 +1,14 @@
-const db = require("../db/libraryQueries");
-
 const fs = require("fs");
+
+const {
+  getLibraryDatabase,
+  getFolderDatabase,
+  getFileDatabase,
+  createFolderDatabase,
+  addFileDatabase,
+  deleteMethodDatabase,
+  renameMethodDatabase,
+} = require("../db/libraryQueries");
 
 //this is going to grab a root file in the database that contains EVERYTHING else
 //redir sends it to the /library/:fileID route
@@ -9,7 +17,7 @@ const fs = require("fs");
 //we went and and fetched in this function
 async function getLibrary(req, res) {
   console.log("entering getLibrary controller...");
-  const rootFolder = await db.getLibraryDatabase(req.user.id);
+  const rootFolder = await getLibraryDatabase(req.user.id);
 
   res.redirect(`/library/${rootFolder.id}`);
 }
@@ -19,7 +27,7 @@ async function getLibrary(req, res) {
 async function renderFolder(req, res) {
   console.log("entering renderFolder controller...");
   //get the folder with cross table matching
-  const folderResponse = await db.getFolderDatabase(
+  const folderResponse = await getFolderDatabase(
     req.user.id,
     req.params.folderID
   );
@@ -28,7 +36,7 @@ async function renderFolder(req, res) {
 
 async function renderFile(req, res) {
   const fileID = req.params.fileID;
-  const file = await db.getFileDatabase(fileID);
+  const file = await getFileDatabase(fileID);
 
   res.render("file", { file: file });
 }
@@ -37,8 +45,9 @@ async function renderFile(req, res) {
 //this will use the url as the url will update as you're navigating
 async function createFolder(req, res) {
   const userID = req.user.id;
+  console.log("folder id in creating", req.params.folderID);
   const parentFolderID = req.params.folderID;
-  await db.createFolderDatabse(userID, parentFolderID);
+  await createFolderDatabse(userID, parentFolderID);
   //refresh the page to where the folder was created in
   //to display change to user
   res.redirect(`/library/${parentFolderID}`);
@@ -58,7 +67,7 @@ async function uploadFile(req, res) {
     const { originalname, size, path } = req.file;
 
     //add file to db
-    await db.addFileDatabase(originalname, path, size, currentFolderID);
+    await addFileDatabase(originalname, path, size, currentFolderID);
 
     //delete the file from the temp multer storage uploads/
     //once its gotten to the postgresql db
@@ -81,7 +90,7 @@ async function deleteMethod(req, res) {
   const type = req.params.type;
   const id = req.params.id;
 
-  await db.deleteMethodDatabase(type, id);
+  await deleteMethodDatabase(type, id);
 
   //redirect to update, fallback to root if failure
   const redirectUrl = req.get("Referer") || `/`;
@@ -95,7 +104,7 @@ async function renameMethod(req, res) {
 
   const { name } = req.body;
 
-  await db.renameMethodDatabase(type, id, name);
+  await renameMethodDatabase(type, id, name);
 
   //redirect to update, fallback to root if failure
   const redirectUrl = req.get("Referer") || `/`;
