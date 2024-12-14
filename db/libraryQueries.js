@@ -106,6 +106,7 @@ async function addFileDatabase(originalname, path, size, folderID) {
 
 //deletion
 async function deleteMethodDatabase(type, id) {
+  console.log("entering deletion db", type, id);
   try {
     const query = {
       where: {
@@ -113,7 +114,7 @@ async function deleteMethodDatabase(type, id) {
       },
     };
     if (type === "folder") {
-      await prisma.folder.deleteFolderRecursion(query);
+      await deleteFolderRecursion(query);
     } else if (type === "file") {
       await prisma.file.delete(query);
     }

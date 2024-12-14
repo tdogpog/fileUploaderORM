@@ -90,6 +90,8 @@ async function deleteMethod(req, res) {
   const type = req.params.type;
   const id = req.params.id;
 
+  console.log("entering controller for deletion", type, id);
+
   await deleteMethodDatabase(type, id);
 
   //redirect to update, fallback to root if failure
