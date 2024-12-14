@@ -1,7 +1,5 @@
 const { Router } = require("express");
 
-const { getLibrary } = require("../controllers/libraryController");
-
 const multer = require("multer");
 
 const upload = multer({

@@ -12,6 +12,7 @@ const passportConfig = async (passport) => {
       console.log("Authenticating:", username, password);
       try {
         const user = await prisma.user.findUnique({ where: { username } });
+        console.log("user", user);
 
         if (!user) {
           return done(null, false, { message: "Incorrect username" });
@@ -19,6 +20,7 @@ const passportConfig = async (passport) => {
 
         //hashing and salting
         const match = await bcrypt.compare(password, user.password);
+        console.log("hash", match);
 
         if (!match) {
           // passwords do not match!
@@ -33,6 +35,7 @@ const passportConfig = async (passport) => {
   );
 
   passport.serializeUser((user, done) => {
+    console.log("Serialized user:", user);
     done(null, user.id);
   });
 
@@ -41,7 +44,7 @@ const passportConfig = async (passport) => {
       const user = await prisma.user.findUnique({
         where: { id },
       });
-
+      console.log("Deserialized user:", user);
       done(null, user);
     } catch (err) {
       done(err);

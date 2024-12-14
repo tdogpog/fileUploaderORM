@@ -48,6 +48,7 @@ function getSignUp(req, res) {
 //call next to stop a hang and let the redir happen
 function userLogin(req, res, next) {
   console.log("Enter login function");
+  console.log("Login attempt:", req.body.username, req.body.password);
   passport.authenticate("local", {
     //redir to library
     successRedirect: "/library",

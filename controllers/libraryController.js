@@ -2,17 +2,22 @@ const db = require("../db/libraryQueries");
 
 const fs = require("fs");
 
-//this is going to grab a root file in the database that contains EVERYTHING else, and render
-//all of its contents
+//this is going to grab a root file in the database that contains EVERYTHING else
+//redir sends it to the /library/:fileID route
+//which is defined in the router to send us to renderFolder
+//this will execute the getFolderDB function upon the root folder
+//we went and and fetched in this function
 async function getLibrary(req, res) {
+  console.log("entering getLibrary controller...");
   const rootFolder = await db.getLibraryDatabase(req.user.id);
-  //redir intead of render to take the user to their file dir based off id when auth checks out
+
   res.redirect(`/library/${rootFolder.id}`);
 }
 
 //renders the contents of the folder when you click on it
 //this will get the root folder at first and forEach on the view to display all contents of the library
 async function renderFolder(req, res) {
+  console.log("entering renderFolder controller...");
   //get the folder with cross table matching
   const folderResponse = await db.getFolderDatabase(
     req.user.id,

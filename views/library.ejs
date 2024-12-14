@@ -4,8 +4,149 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>File Library</title>
+    <style>
+      /* Basic styles for layout */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        height: 100vh;
+      }
+
+      header {
+        background-color: #0073e6;
+        color: #fff;
+        padding: 0.1rem;
+        text-align: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: row;
+        margin-top: 60px; /* Offset for fixed header */
+        width: 100%;
+      }
+
+      .sidebar {
+        width: 20%;
+        background-color: #f4f4f4;
+        padding: 1rem;
+        overflow-y: auto;
+        border-right: 1px solid #ccc;
+      }
+
+      .main-content {
+        width: 80%;
+        padding: 1rem;
+        overflow-y: auto;
+      }
+
+      .folder,
+      .file {
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #fff;
+      }
+
+      .folder:hover,
+      .file:hover {
+        background-color: #f0f8ff;
+      }
+    </style>
   </head>
   <body>
-    <li>access granted</li>
+    <!-- Header -->
+    <header>
+      <h1>File Library</h1>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+      <!-- Sidebar for Folder Navigation -->
+      <div class="sidebar">
+        <h3>Folders</h3>
+        <ul>
+          <% folder.subfolders.forEach((subfolder) => { %>
+          <li class="folder">
+            <!-- Link to view the subfolder -->
+            <a href="/library/<%= subfolder.id %>"><%= subfolder.name %></a>
+          </li>
+          <% }); %>
+        </ul>
+        <% if (folder.parent) { %>
+        <p>
+          <!-- Link to navigate to the parent folder -->
+          <a href="/library/<%= folder.parent.id %>">Go Up</a>
+        </p>
+        <% } %>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="main-content">
+        <h2>Current Folder: <%= folder.name %></h2>
+
+        <!-- Subfolders -->
+        <section>
+          <h3>Subfolders</h3>
+          <% if (folder.subfolders.length > 0) { %>
+          <ul>
+            <% folder.subfolders.forEach((subfolder) => { %>
+            <li class="folder">
+              <a href="/library/<%= subfolder.id %>"><%= subfolder.name %></a>
+            </li>
+            <% }); %>
+          </ul>
+          <% } else { %>
+          <p>No subfolders available.</p>
+          <% } %>
+        </section>
+
+        <!-- Files -->
+        <section>
+          <h3>Files</h3>
+          <% if (folder.files.length > 0) { %>
+          <ul>
+            <% folder.files.forEach((file) => { %>
+            <li class="file">
+              <%= file.name %> (<a href="<%= file.path %>" download>Download</a
+              >)
+            </li>
+            <% }); %>
+          </ul>
+          <% } else { %>
+          <p>No files available.</p>
+          <% } %>
+        </section>
+
+        <!-- Add New Subfolder -->
+        <form action="/library/<%= folder.id %>/add-sub" method="POST">
+          <input
+            type="text"
+            name="folderName"
+            placeholder="New Folder Name"
+            required
+          />
+          <button type="submit">Create Subfolder</button>
+        </form>
+
+        <!-- Upload New File -->
+        <form
+          action="/library/<%= folder.id %>/upload"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <input type="file" name="uploaded_file" required />
+          <button type="submit">Upload File</button>
+        </form>
+      </div>
+    </div>
   </body>
 </html>

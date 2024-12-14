@@ -4,6 +4,8 @@ const bcrypt = require("bcryptjs");
 const prisma = new PrismaClient();
 
 //fetch the root
+// this func just wants to grab the id
+// to redir to the render router
 async function getLibraryDatabase(userID) {
   try {
     const library = await prisma.folder.findFirst({
