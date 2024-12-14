@@ -47,7 +47,7 @@ async function createFolder(req, res) {
   const userID = req.user.id;
   console.log("folder id in creating", req.params.folderID);
   const parentFolderID = req.params.folderID;
-  await createFolderDatabse(userID, parentFolderID);
+  await createFolderDatabase(userID, parentFolderID);
   //refresh the page to where the folder was created in
   //to display change to user
   res.redirect(`/library/${parentFolderID}`);
