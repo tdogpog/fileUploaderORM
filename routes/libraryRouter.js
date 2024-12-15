@@ -12,6 +12,7 @@ const {
   renderFolder,
   renderFile,
   uploadFile,
+  downloadFile,
   createFolder,
   renameMethod,
   deleteMethod,
@@ -37,6 +38,9 @@ libraryRouter.post(
   upload.single("uploaded_file"),
   uploadFile
 );
+
+//DOWNLOADING THE FILE
+libraryRouter.get("/file/:fileID/download", downloadFile);
 
 libraryRouter.post("/:folderID/add-sub", createFolder);
 

@@ -87,6 +87,19 @@ async function createFolderDatabase(userID, parentFolderID) {
   }
 }
 
+async function getDownloadDatabase(fileID) {
+  try {
+    const download = await prisma.file.findUnique({
+      where: {
+        id: fileID,
+      },
+    });
+    return download;
+  } catch (error) {
+    console.log("error in db with dling", error.message);
+  }
+}
+
 //uploading a new file
 async function addFileDatabase(originalname, path, size, folderID) {
   try {
@@ -175,6 +188,7 @@ module.exports = {
   getFolderDatabase,
   getFileDatabase,
   createFolderDatabase,
+  getDownloadDatabase,
   addFileDatabase,
   deleteMethodDatabase,
   renameMethodDatabase,

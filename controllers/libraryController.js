@@ -5,6 +5,7 @@ const {
   getFolderDatabase,
   getFileDatabase,
   createFolderDatabase,
+  getDownloadDatabase,
   addFileDatabase,
   deleteMethodDatabase,
   renameMethodDatabase,
@@ -85,6 +86,16 @@ async function uploadFile(req, res) {
   }
 }
 
+async function downloadFile(req, res) {
+  try {
+    const fileToDownload = req.params.fileID;
+    const file = await db.getFile(fileToDownload);
+  } catch (error) {
+    console.log("download error msg", error.message);
+    res.status(500).send("error dling file");
+  }
+}
+
 //deletes an entire folder recursively using the url
 async function deleteMethod(req, res) {
   const type = req.params.type;
@@ -129,6 +140,7 @@ module.exports = {
   renderFile,
   createFolder,
   uploadFile,
+  downloadFile,
   deleteMethod,
   renameMethod,
 };
