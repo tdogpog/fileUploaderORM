@@ -101,16 +101,26 @@ async function deleteMethod(req, res) {
 
 //renames using the url
 async function renameMethod(req, res) {
-  const type = req.params.type;
-  const id = req.params.id;
+  try {
+    const type = req.params.type;
+    const id = req.params.id;
 
-  const { name } = req.body;
+    console.log("req.body:", req.body); // Log the parsed body
+    console.log("req.params:", req.params);
 
-  await renameMethodDatabase(type, id, name);
+    const { name } = req.body;
 
-  //redirect to update, fallback to root if failure
-  const redirectUrl = req.get("Referer") || `/`;
-  res.redirect(redirectUrl);
+    console.log("Name received:", name);
+
+    await renameMethodDatabase(type, id, name);
+
+    //redirect to update, fallback to root if failure
+    const redirectUrl = req.get("Referer") || `/`;
+    res.redirect(redirectUrl);
+  } catch (error) {
+    console.log("rename method error:", error.message);
+    res.status(500).send("Error renaming");
+  }
 }
 
 module.exports = {

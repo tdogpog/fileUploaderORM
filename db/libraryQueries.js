@@ -120,6 +120,7 @@ async function deleteMethodDatabase(type, id) {
 
 //renaming
 async function renameMethodDatabase(type, id, updatedName) {
+  console.log("entering renaming function", type, id, updatedName);
   try {
     const query = {
       where: {
@@ -130,8 +131,10 @@ async function renameMethodDatabase(type, id, updatedName) {
       },
     };
     if (type === "folder") {
+      console.log("renaming folder IF");
       await prisma.folder.update(query);
     } else if (type === "file") {
+      console.log("renaming file IF");
       await prisma.file.update(query);
     }
   } catch (error) {

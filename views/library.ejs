@@ -179,9 +179,9 @@
     </div>
 
     <dialog id="edit-modal">
-      <form method="POST">
+      <form id="rename-form" method="POST">
         <label for="rename-input">New Name:</label>
-        <input id="rename-input" type="text" name="newName" required />
+        <input id="rename-input" type="text" name="name" required />
         <button type="submit">Save</button>
         <button type="button" onclick="this.closest('dialog').close();">
           Cancel
