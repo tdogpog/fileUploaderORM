@@ -6,6 +6,7 @@ express
 node.js
 Prisma ORM
 postgresql
+ejs
 
 core libraries:
 passport.js
