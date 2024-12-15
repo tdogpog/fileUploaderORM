@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 
 const {
   getLibraryDatabase,
@@ -72,11 +73,11 @@ async function uploadFile(req, res) {
 
     //delete the file from the temp multer storage uploads/
     //once its gotten to the postgresql db
-    fs.unlink(path, (err) => {
-      if (err) {
-        console.error("Error deleting temporary file:", err);
-      }
-    });
+    // fs.unlink(path, (err) => {
+    //   if (err) {
+    //     console.error("Error deleting temporary file:", err);
+    //   }
+    // });
 
     const redirectUrl = req.get("Referer") || `/`;
     res.redirect(redirectUrl);
@@ -89,7 +90,19 @@ async function uploadFile(req, res) {
 async function downloadFile(req, res) {
   try {
     const fileToDownload = req.params.fileID;
-    const file = await db.getFile(fileToDownload);
+    const file = await getDownloadDatabase(fileToDownload);
+    //these two are grabbed from the db
+    const filePath = path.resolve(__dirname, "../", file.path); // Path to the file on the server
+    console.log("File path from database:", file.path);
+
+    const fileName = file.name; // Original file name for download
+
+    res.download(filePath, fileName, (err) => {
+      if (err) {
+        console.error("Error during file download:", err.message);
+        res.status(500).send("Error downloading file.");
+      }
+    });
   } catch (error) {
     console.log("download error msg", error.message);
     res.status(500).send("error dling file");
