@@ -33,7 +33,7 @@ libraryRouter.get("/file/:fileID", renderFile);
 //MULTER PROCESS
 // Upload a file to the specified folder
 libraryRouter.post(
-  "/:folderId/upload",
+  "/:folderID/upload",
   upload.single("uploaded_file"),
   uploadFile
 );
