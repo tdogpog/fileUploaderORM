@@ -1,14 +1,14 @@
 online file directory MVP 
 
 tech used:
-javascript
-express
-node.js
-Prisma ORM
-postgresql
+javascript,
+express,
+node.js,
+Prisma ORM,
+postgresql,
 ejs
 
 core libraries:
-passport.js
-multer
+passport.js,
+multer,
 bcryptjs
